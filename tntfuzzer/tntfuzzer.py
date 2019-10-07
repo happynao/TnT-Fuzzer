@@ -10,6 +10,7 @@ from core.httpoperation import HttpOperation
 from core.resultvalidatior import ResultValidator
 from core.replicator import Replicator
 from utils.strutils import StrUtils
+from utils.generate_html import generate_html
 from urllib.parse import urlparse
 
 version = "2.3.0"
@@ -112,6 +113,7 @@ class TntFuzzer:
         # the specifcation can list multiple schemes (http, https, ws, wss) - all should be tested.
         # Each scheme is a potentially different end point
         replicator = Replicator(type_definitions, self.use_string_pattern, True, self.max_string_length)
+        html_table_data = []
         for protocol in schemes:
             for path_key in paths.keys():
                 path = paths[path_key]
@@ -130,7 +132,13 @@ class TntFuzzer:
 
                         # log to screen for now
                         self.log_operation(operation.op_code, response.url, log, curlcommand)
-
+                        
+                        # html reports
+                        status_code, documented_reason, body = self.html_log(log)
+                        obj = {"op_code": op_code, "url": response.url, "status_code": status_code,
+                               "response_msg": documented_reason, "body": body, "curl_command": curlcommand.get()}
+                        html_table_data.append(obj)
+        generate_html(html_table_data)
         return True
 
     def log_operation(self, op_code, url, log, curlcommand):
@@ -143,7 +151,17 @@ class TntFuzzer:
         else:
             if not self.log_unexpected_errors_only:
                 StrUtils.print_log_row(op_code, url, status_code, documented_reason, body, curlcommand)
-
+ 
+    def html_log(self,  log):
+        status_code = str(log['status_code'])
+        documented_reason = log['documented_reason']
+        body = log['body'].replace('\n', ' ')
+        if documented_reason is None:
+            return status_code, 'None', body
+        else:
+            if not self.log_unexpected_errors_only:
+                return status_code, documented_reason, body
+            
     def get_swagger_spec(self, url):
         verify_tls = not self.ignore_tls  # ignore_tls defaults to False, but verify=False will disable TLS verification
         return json.loads(requests.get(url=url, headers=self.headers, verify=verify_tls).text)
