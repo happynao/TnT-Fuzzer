@@ -14,9 +14,9 @@
         <th>response body</th>
         <th>curl command</th>
     </tr>
-    {% set is_true = false %}
+    {% set ns=namespace(is_true = false ) %}
     {% for item in body %}
-        {% if is_true %}
+        {% if ns.is_true %}
             <tr class="alt">
                 <td>{{ item.op_code }}</td>
                 <td>{{ item.url }}</td>
@@ -25,8 +25,9 @@
                 <td>{{ item.body }}</td>
                 <td>{{ item.curl_command }}</td>
             </tr>
+            {% set ns.is_true = false %}
         {% else %}
-            {% set is_true = true %}
+            {% set ns.is_true = true %}
            <tr>
                <td>{{ item.op_code }}</td>
                <td>{{ item.url }}</td>
