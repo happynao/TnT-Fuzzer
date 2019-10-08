@@ -10,7 +10,7 @@ from core.httpoperation import HttpOperation
 from core.resultvalidatior import ResultValidator
 from core.replicator import Replicator
 from utils.strutils import StrUtils
-from utils.generate_html import generate_html
+from utils.generate_html import generate_html, generate_report, getListOfFiles
 from urllib.parse import urlparse
 
 version = "2.3.0"
@@ -140,6 +140,8 @@ class TntFuzzer:
                                "response_msg": documented_reason, "body": body, "curl_command": curlcommand.get()}
                         html_table_data.append(obj)
         generate_html(html_table_data, self.report_dir)
+        files = getListOfFiles(self.report_dir)
+        generate_report(self.report_dir, files)
         return True
 
     def log_operation(self, op_code, url, log, curlcommand):
