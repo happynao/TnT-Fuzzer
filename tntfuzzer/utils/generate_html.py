@@ -1,9 +1,19 @@
-from jinja2 import Environment, FileSystemLoader
+from builtins import OSError
 
-def generate_html(body):
+from jinja2 import Environment, FileSystemLoader
+import os
+
+def generate_html(body, report_dir):
     env = Environment(loader=FileSystemLoader('./'))
     template = env.get_template('tntfuzzer/utils/template.html')
-    with open("result.html", 'w+') as fout:
+    dirname = os.path.dirname(report_dir)
+    if not os.path.exists(os.path.dirname(report_dir)):
+        try:
+            os.makedirs(os.path.dirname(report_dir))
+        except OSError:
+            pass
+    path_file = r"{}fuzz_testing_report.html".format(report_dir)
+    with open(path_file, mode='w+', encoding='utf-8', buffering=1) as fout:
         html_content = template.render(body=body)
         fout.write(html_content)
 
@@ -16,4 +26,4 @@ if __name__ == "__main__":
            "response_msg": "ok", "body": "body", "curl_command": "curl_command"}
     body.append(obj)
     body.append(obj2)
-    generate_html(body)
+    generate_html(body, "/tmp/reports/")
