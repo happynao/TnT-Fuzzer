@@ -14,7 +14,7 @@
         <th>response body</th>
         <th>curl command</th>
     </tr>
-    {% set is_true = False %}
+    {% set is_true = false %}
     {% for item in body %}
         {% if is_true %}
             <tr class="alt">
@@ -26,7 +26,7 @@
                 <td>{{ item.curl_command }}</td>
             </tr>
         {% else %}
-            {% set is_true = True %}
+            {% set is_true = true %}
            <tr>
                <td>{{ item.op_code }}</td>
                <td>{{ item.url }}</td>
