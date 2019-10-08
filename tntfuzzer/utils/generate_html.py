@@ -52,5 +52,5 @@ if __name__ == "__main__":
     # body.append(obj)
     # body.append(obj2)
     # generate_html(body, "/tmp/reports/")
-    # list_of_files = getListOfFiles("/tmp/reports/")
-    # generate_report("/tmp/reports/", list_of_files)
+    list_of_files = getListOfFiles("/tmp/reports/")
+    generate_report("/tmp/reports/", list_of_files)
