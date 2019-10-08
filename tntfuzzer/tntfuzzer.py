@@ -131,7 +131,7 @@ class TntFuzzer:
                                                   self.ignore_tls)
 
                         # log to screen for now
-                        #  self.log_operation(operation.op_code, response.url, log, curlcommand)
+                        self.log_operation(operation.op_code, response.url, log, curlcommand)
                         
                         # html reports
                         status_code, documented_reason, body = self.html_log(log)

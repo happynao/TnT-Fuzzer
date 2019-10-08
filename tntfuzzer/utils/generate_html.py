@@ -2,7 +2,7 @@ from jinja2 import Environment, FileSystemLoader
 
 def generate_html(body):
     env = Environment(loader=FileSystemLoader('./'))
-    template = env.get_template('tntfuzzer/utils/template.html')
+    template = env.get_template('utils/template.html')
     with open("result.html", 'w+') as fout:
         html_content = template.render(body=body)
         fout.write(html_content)
