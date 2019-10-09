@@ -27,8 +27,9 @@
     </style>
 </head>
 <body>
+   <h2>build record</h2>
    {% for item  in files%}
-   <li><a href= {{ files[item] }}> {{ item }}</a></li>
+   <li><a href= {{ files[item] }}> build id: #{{ item }}</a></li>
    {% endfor %}
 </body>
 </html>

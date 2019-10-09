@@ -1,23 +1,26 @@
-from builtins import OSError
-
-from jinja2 import Environment, FileSystemLoader
 import os
+import ntpath
 
-def generate_html(body, report_dir):
+from builtins import OSError
+from jinja2 import Environment, FileSystemLoader
+
+
+def generate_html(body, report_dir, build_id):
     env = Environment(loader=FileSystemLoader('./'))
-    template = env.get_template('tntfuzzer/utils/template.html')
-    if not os.path.exists(os.path.dirname(report_dir)):
+    template = env.get_template('utils/template.html')
+    path = "{}/{}/".format(report_dir, build_id)
+    if not os.path.exists(os.path.dirname(path)):
         try:
-            os.makedirs(os.path.dirname(report_dir))
+            os.makedirs(os.path.dirname(path))
         except OSError:
             pass
-    with open(r"{}fuzz_testing_report.html".format(report_dir), mode='w+', encoding='utf-8', buffering=1) as f:
+    with open(r"{}fuzz_testing_report.html".format(path), mode='w+', encoding='utf-8', buffering=1) as f:
         html_content = template.render(body=body)
         f.write(html_content)
 
 def generate_report(report_dir, files):
     env = Environment(loader=FileSystemLoader('./'))
-    template = env.get_template('tntfuzzer/utils/index.html')
+    template = env.get_template('utils/index.html')
     if not os.path.exists(os.path.dirname(report_dir)):
         try:
             os.makedirs(os.path.dirname(report_dir))
@@ -43,6 +46,11 @@ def getListOfFiles(dirName):
         #     allFiles.append(fullPath)
     return allFiles
 
+# def path_leaf(path):
+#     head, tail = ntpath.split(path)
+#     path1, build_id = ntpath.basename(head)
+#     return path1
+
 if __name__ == "__main__":
     # body = []
     # obj = {"op_code": "GET", "url": "abc", "status_code": 500,
@@ -52,5 +60,5 @@ if __name__ == "__main__":
     # body.append(obj)
     # body.append(obj2)
     # generate_html(body, "/tmp/reports/")
-    list_of_files = getListOfFiles("/tmp/reports/")
-    generate_report("/tmp/reports/", list_of_files)
+    list_of_files = getListOfFiles("/tmp/reports_test/")
+    #generate_report("/tmp/reports/", list_of_files)

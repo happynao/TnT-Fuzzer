@@ -23,7 +23,7 @@ class SchemaException(Exception):
 class TntFuzzer:
 
     def __init__(self, url, iterations, headers, log_unexpected_errors_only,
-                 max_string_length, use_string_pattern, report_dir, ignore_tls=False, host=None, basepath=None):
+                 max_string_length, use_string_pattern, report_dir, build_id,  ignore_tls=False, host=None, basepath=None):
         self.url = url
         self.iterations = iterations
         self.headers = headers
@@ -31,6 +31,7 @@ class TntFuzzer:
         self.max_string_length = max_string_length
         self.use_string_pattern = use_string_pattern
         self.report_dir= report_dir
+        self.build_id = build_id
         self.ignore_tls = ignore_tls
         self.host = host
         self.basepath = basepath
@@ -139,7 +140,7 @@ class TntFuzzer:
                         obj = {"op_code": op_code, "url": response.url, "status_code": status_code,
                                "response_msg": documented_reason, "body": body, "curl_command": curlcommand.get()}
                         html_table_data.append(obj)
-        generate_html(html_table_data, self.report_dir)
+        generate_html(html_table_data, self.report_dir, self.build_id)
         files = getListOfFiles(self.report_dir)
         generate_report(self.report_dir, files)
         return True
@@ -225,6 +226,8 @@ def main():
     parser.add_argument('--reportdir', type=str, default="/tmp/reports",
                         help='report dir.')
 
+    parser.add_argument('--buildid', type=str, default="100",
+                        help='build id ')
     args = vars(parser.parse_args())
 
     if args['url'] is None:
@@ -233,7 +236,7 @@ def main():
         tnt = TntFuzzer(url=args['url'], iterations=args['iterations'], headers=args['headers'],
                         log_unexpected_errors_only=not args['log_all'], use_string_pattern=args['string-patterns'],
                         max_string_length=args['max-random-string-len'], ignore_tls=args["ignore-tls"],
-                        host=args["host"], basepath=args["basepath"], report_dir=args["reportdir"])
+                        host=args["host"], basepath=args["basepath"], report_dir=args["reportdir"], build_id=args["buildid"])
         try:
             tnt.start()
         except SchemaException:
