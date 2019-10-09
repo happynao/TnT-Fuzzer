@@ -7,7 +7,7 @@ from jinja2 import Environment, FileSystemLoader
 
 def generate_html(body, report_dir, build_id):
     env = Environment(loader=FileSystemLoader('./'))
-    template = env.get_template('utils/template.html')
+    template = env.get_template('tntfuzzer/utils/template.html')
     path = "{}/{}/".format(report_dir, build_id)
     if not os.path.exists(path):
         try:
@@ -21,7 +21,7 @@ def generate_html(body, report_dir, build_id):
 
 def generate_report(report_dir, files):
     env = Environment(loader=FileSystemLoader('./'))
-    template = env.get_template('utils/index.html')
+    template = env.get_template('tntfuzzer/utils/index.html')
     # if not os.path.exists(report_dir):
     #     try:
     #         os.makedirs(report_dir)
